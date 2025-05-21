@@ -1,6 +1,5 @@
 package com.kingmakers.codemotion25kmp
 
-import cocoapods.FirebaseAnalytics.FIRAnalytics
 import com.kingmakers.codemotion25kmp.presentation.ExampleViewModel
 import com.rickclephas.kmp.observableviewmodel.ViewModel
 import io.ktor.client.HttpClientConfig
@@ -9,9 +8,6 @@ import io.ktor.client.engine.HttpClientEngineFactory
 import io.ktor.client.engine.darwin.Darwin
 import io.ktor.client.engine.darwin.DarwinClientEngineConfig
 import org.koin.core.component.KoinComponent
-import platform.Foundation.HTTPBody
-import platform.Foundation.HTTPMethod
-import platform.Foundation.setValue
 import platform.UIKit.UIDevice
 
 class IOSPlatform: Platform {
@@ -40,14 +36,6 @@ private fun HttpClientConfig<DarwinClientEngineConfig>.realConfigurePlatform() {
     engine {
         configureRequest {
             setAllowsCellularAccess(true)
-        }
-
-        configureRequest {
-            //TODO: find a better way
-            if (this.HTTPMethod == "GET") {
-                this.HTTPBody = null
-                this.setValue(null, forHTTPHeaderField = "Content-Length")
-            }
         }
     }
 }
