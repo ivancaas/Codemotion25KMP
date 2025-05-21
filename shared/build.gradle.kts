@@ -1,3 +1,7 @@
+import co.touchlab.skie.configuration.EnumInterop
+import co.touchlab.skie.configuration.FlowInterop
+import co.touchlab.skie.configuration.SealedInterop
+import co.touchlab.skie.configuration.SuspendInterop
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
 plugins {
@@ -8,6 +12,27 @@ plugins {
     alias(libs.plugins.ktorfit)
     alias(libs.plugins.kmmbridge)
     alias(libs.plugins.skie)
+    alias(libs.plugins.nativeCoroutines)
+}
+
+skie {
+    analytics {
+        enabled.set(false)
+    }
+
+    features {
+        coroutinesInterop.set(false)
+
+        group {
+            EnumInterop.Enabled(true)
+            SealedInterop.Enabled(true)
+            SuspendInterop.Enabled(false)
+            FlowInterop.Enabled(false)
+        }
+    }
+    build {
+        produceDistributableFramework()
+    }
 }
 
 kotlin {
@@ -57,6 +82,11 @@ kotlin {
             implementation(libs.androidx.startup)
             implementation(libs.ktor.client.okhttp)
         }
+    }
+}
+kmmbridge {
+    spm(swiftToolVersion = "5.8") {
+        iOS { v("14") }
     }
 }
 
