@@ -3,6 +3,7 @@ import co.touchlab.skie.configuration.FlowInterop
 import co.touchlab.skie.configuration.SealedInterop
 import co.touchlab.skie.configuration.SuspendInterop
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+import org.jetbrains.kotlin.gradle.plugin.mpp.apple.XCFramework
 
 plugins {
     alias(libs.plugins.kotlinMultiplatform)
@@ -10,9 +11,9 @@ plugins {
     alias(libs.plugins.kotlinx.serialization)
     alias(libs.plugins.ksp)
     alias(libs.plugins.ktorfit)
-    alias(libs.plugins.kmmbridge)
     alias(libs.plugins.skie)
     alias(libs.plugins.nativeCoroutines)
+    alias(libs.plugins.kotlinCocoapods)
 }
 
 skie {
@@ -46,17 +47,28 @@ kotlin {
         }
     }
 
+    val framework = XCFramework()
     listOf(
         iosX64(),
         iosArm64(),
         iosSimulatorArm64()
     ).forEach {
         it.binaries.framework {
+            framework.add(this)
             baseName = "shared"
             isStatic = true
         }
     }
 
+    cocoapods {
+        ios.deploymentTarget = "16.0"
+
+        version = "1.0.0"
+        pod("FirebaseAnalytics") {
+            version = "10.27.0"
+            extraOpts = listOf("-compiler-option", "-fmodules")
+        }
+    }
     sourceSets {
         all {
             languageSettings.optIn("kotlinx.cinterop.ExperimentalForeignApi")
@@ -81,14 +93,11 @@ kotlin {
         androidMain.dependencies {
             implementation(libs.androidx.startup)
             implementation(libs.ktor.client.okhttp)
+            implementation(libs.firebase.analytics)
         }
     }
 }
-kmmbridge {
-    spm(swiftToolVersion = "5.8") {
-        iOS { v("14") }
-    }
-}
+
 
 android {
     namespace = "com.kingmakers.codemotion25kmp"

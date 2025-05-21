@@ -1,5 +1,6 @@
 package com.kingmakers.codemotion25kmp
 
+import cocoapods.FirebaseAnalytics.FIRAnalytics
 import com.kingmakers.codemotion25kmp.presentation.ExampleViewModel
 import com.rickclephas.kmp.observableviewmodel.ViewModel
 import io.ktor.client.HttpClientConfig
@@ -34,6 +35,7 @@ class ViewModels : KoinComponent {
     fun getExampleViewModel(): ExampleViewModel = getViewModel()
 }
 
+
 private fun HttpClientConfig<DarwinClientEngineConfig>.realConfigurePlatform() {
     engine {
         configureRequest {
@@ -49,3 +51,4 @@ private fun HttpClientConfig<DarwinClientEngineConfig>.realConfigurePlatform() {
         }
     }
 }
+
